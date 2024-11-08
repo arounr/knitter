@@ -12,6 +12,7 @@
   --color-button-bg-hover: #0056b3; /* Darker shade of blue for hover */
   --color-input-bg: #f1f3f5; /* Very light gray for inputs */
   --color-error: #dc3545; /* Red for error messages or indicators */
+  --color-success: #28a745; /* Green for success indicators */
 }
 
 /* Dark Mode */
@@ -24,7 +25,6 @@
     --color-button-bg: #3b82f6; /* Bright blue for button */
     --color-button-bg-hover: #2563eb; /* Slightly darker blue for button hover */
     --color-input-bg: #3c3f48; /* Dark gray for inputs */
-    --color-error: #f87171; /* Lighter red for error in dark mode */
   }
 }
 

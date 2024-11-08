@@ -5,16 +5,12 @@
 First, run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+// then
+npm run dev // or npm run start for deploying
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The site should then be at [http://localhost:3000](http://localhost:3000).
 
 ## TODO List (not exhaustive)
 

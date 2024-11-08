@@ -26,7 +26,7 @@ export default function RegisterPage() {
         setErrors([result.error]);
       }
     } else {
-      setErrors([]); // Clear errors on success
+      setErrors([]);
       window.location.href = '/login';
     }
   }

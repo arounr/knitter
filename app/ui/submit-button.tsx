@@ -1,4 +1,5 @@
 'use client'
+
 import { useFormStatus } from 'react-dom'
 
 interface SubmitButtonProps {
@@ -7,6 +8,7 @@ interface SubmitButtonProps {
   loadingText?: string;
 }
 
+// For forms
 export default function SubmitButton({
   className = '',
   text = 'Login',
