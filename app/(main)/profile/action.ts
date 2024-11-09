@@ -62,7 +62,7 @@ export async function uploadProfilePicture(file: File) {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await fetch(`${apiUrl}/uploadPicture`, {
+    const response = await fetch(`${apiUrl}/profile/uploadPicture`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token.value}`,
@@ -71,6 +71,7 @@ export async function uploadProfilePicture(file: File) {
     });
 
     if (!response.ok) {
+      console.log(response)
       const errorData = await response.json();
       return { error: errorData.message || 'Failed to upload profile picture' };
     }
