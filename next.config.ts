@@ -5,11 +5,23 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'i.ibb.co',
+        hostname: 'icon-library.com',
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'http',
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '/**'
+      }
     ]
+  },
+
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '5mb',
+    }
   }
 };
 

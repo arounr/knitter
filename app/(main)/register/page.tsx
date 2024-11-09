@@ -93,7 +93,7 @@ export default function RegisterPage() {
             </div>
           )}
 
-          <SubmitButton className="w-4/5 py-2 mt-4 font-medium text-[var(--color-background)] bg-[var(--color-button-bg)] rounded-md hover:bg-[var(--color-button-bg-hover)] focus:ring-2 focus:ring-[var(--color-button-bg)] focus:outline-none" />
+          <SubmitButton text='Register' className="w-4/5 py-2 mt-4 font-medium text-[var(--color-background)] bg-[var(--color-button-bg)] rounded-md hover:bg-[var(--color-button-bg-hover)] focus:ring-2 focus:ring-[var(--color-button-bg)] focus:outline-none" />
         </Form>
         
         <Link href="/login" passHref>

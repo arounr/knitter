@@ -1,6 +1,6 @@
-import { getProfile } from './action';
-import { logout } from './action';
 import { redirect } from 'next/navigation';
+import { getProfile, logout } from './action';
+import ProfilePicture from '@/ui/profile-picture';
 
 export default async function ProfilePage() {
   const profile = await getProfile();
@@ -9,7 +9,7 @@ export default async function ProfilePage() {
     redirect('/');
   }
 
-  const { username } = profile;
+  const { username, profilePicture } = profile;
 
   return (
     <div className="w-full max-w-sm p-8 mt-8 space-y-6 bg-[var(--color-card-bg)] rounded-lg shadow-lg sm:p-12">
@@ -21,18 +21,7 @@ export default async function ProfilePage() {
       </div>
 
       {/* Profile Picture Section */}
-      {/* <div className="flex flex-col items-center space-y-4">
-        <img
-          src="null" // Replace with actual profile picture URL if available
-          alt="Profile Picture"
-          width={96}
-          height={96}
-          className="rounded-full object-cover bg-gray-200"
-        />
-        <button className="px-4 py-2 bg-[var(--color-button-bg)] hover:bg-[var(--color-button-bg-hover)] text-white rounded-md">
-          Change Profile Picture
-        </button>
-      </div> */}
+      <ProfilePicture profilePicture={profilePicture} />
 
       <div className="space-y-4">
         <h2 className="text-lg font-medium">Change Password</h2>
