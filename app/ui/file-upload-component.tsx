@@ -1,4 +1,3 @@
-// FileUploadComponent.tsx
 import React, { useState } from 'react';
 
 function FileUploadComponent({
@@ -36,9 +35,9 @@ function FileUploadComponent({
         throw new Error(`Error: ${errorText}`);
       }
 
-      const data = await response.json(); // Assuming data is a matrix (e.g., [[1, 2, 3], [4, 5, 6]])
+      const data = await response.json();
       console.log('Received matrix data:', data);
-      setPattern(data); // Pass matrix data back to the parent component
+      setPattern(data);
     } catch (e) {
       console.error(e);
       setError(String(e));
@@ -46,18 +45,23 @@ function FileUploadComponent({
   };
 
   return (
-    <div>
-      <input type="file" onChange={(e) => e.target.files && setFile(e.target.files[0])} />
+    <div className="flex flex-col space-y-4">
+      <input
+        type="file"
+        onChange={(e) => e.target.files && setFile(e.target.files[0])}
+        className="border rounded px-2 py-1 bg-white text-black"
+      />
       <button
         type="button"
         onClick={(e) => {
           e.preventDefault();
           handleSubmit();
         }}
+        className="border-b border-white rounded-lg px-2 py-1"
       >
         Upload and Generate Pattern
       </button>
-      {error && <p>{error}</p>}
+      {error && <p className="text-red-500">{error}</p>}
     </div>
   );
 }

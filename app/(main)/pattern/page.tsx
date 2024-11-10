@@ -45,7 +45,7 @@ export default function Pattern() {
     <>
       <Form action="/pattern">
         <h1>{name}</h1>
-        <fieldset>
+        <fieldset className="flex flex-col space-y-4">
           <label htmlFor="name">Name:</label>
           <input
             type="text"
