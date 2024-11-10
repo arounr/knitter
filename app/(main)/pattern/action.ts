@@ -18,7 +18,7 @@ export const newUrlPattern = async (url: string, width: number, numColors: numbe
       throw new Error(`Error: ${response}`);
     }
 
-    const data = await (response.text().then(json => JSON.parse(json))); // Assuming makePattern returns a simple string
+    const data = await (response.text()); // Assuming makePattern returns a simple string
     return data
   } catch (error) {
     console.error('Failed to create pattern:', error);
