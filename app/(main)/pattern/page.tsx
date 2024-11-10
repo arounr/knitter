@@ -1,5 +1,5 @@
-// Pattern.tsx
-'use client'
+'use client';
+
 import { useEffect, useState } from 'react';
 import Form from 'next/form';
 import { newUrlPattern } from './action';
@@ -9,7 +9,12 @@ import FileUploadComponent from '@/ui/file-upload-component';
 
 export default function Pattern() {
   const [colors, setColors] = useState(3);
-  const [color, setColor] = useState(['#A8DADC', '#A7D49B', '#CDB4DB', '#F7D794']);
+  const [color, setColor] = useState([
+    '#A8DADC',
+    '#A7D49B',
+    '#CDB4DB',
+    '#F7D794',
+  ]);
   const [name, setName] = useState('');
   const [select, setSelect] = useState(false);
   const [method, setMethod] = useState('');
@@ -24,22 +29,26 @@ export default function Pattern() {
 
   useEffect(() => {
     if (select) return;
-    const typeInterval = setInterval(() => {
+
+    if (currentWordIndex < words.length) {
       const currentWord = words[currentWordIndex];
 
       if (currentLetterIndex < currentWord.length) {
-        setDisplayedText((prev) => prev + currentWord[currentLetterIndex]);
-        setCurrentLetterIndex((prev) => prev + 1);
+        const timeoutId = setTimeout(() => {
+          setDisplayedText((prev) => prev + currentWord[currentLetterIndex]);
+          setCurrentLetterIndex((prev) => prev + 1);
+        }, 200);
+        return () => clearTimeout(timeoutId);
       } else {
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
           setDisplayedText('');
           setCurrentLetterIndex(0);
           setCurrentWordIndex((prev) => (prev + 1) % words.length);
         }, 1000);
+        return () => clearTimeout(timeoutId);
       }
-    }, 200);
-    return () => clearInterval(typeInterval);
-  });
+    }
+  }, [select, currentWordIndex, currentLetterIndex, words]);
 
   return (
     <>
@@ -73,13 +82,15 @@ export default function Pattern() {
               max={4}
               step={1}
               value={colors}
-              onChange={(e) => setColors(Number.parseInt(e.target.value) || colors)}
+              onChange={(e) =>
+                setColors(Number.parseInt(e.target.value) || colors)
+              }
             />
           </div>
 
           <ol className="flex flex-row space-x-4">
-            {color.map((stak, nr) => (
-              nr < colors ?
+            {color.map((stak, nr) =>
+              nr < colors ? (
                 <li key={'Color' + nr} className="flex flex-col items-center">
                   <label htmlFor={'Color' + nr}>Color {nr + 1}</label>
                   <input
@@ -89,14 +100,22 @@ export default function Pattern() {
                     value={stak}
                     onChange={(e) =>
                       setColor(
-                        color.map((stak2, nr2) => (nr2 === nr ? e.target.value : stak2))
+                        color.map((stak2, nr2) =>
+                          nr2 === nr ? e.target.value : stak2,
+                        ),
                       )
                     }
                     className="w-16 h-10 text-center"
                   />
                   <span className="text-sm mt-1">{stak}</span>
-                </li> : <div key={'Color' + nr} className="flex flex-col items-center" ></div>
-            ))}
+                </li>
+              ) : (
+                <div
+                  key={'Color' + nr}
+                  className="flex flex-col items-center"
+                ></div>
+              ),
+            )}
           </ol>
 
           <div className="flex flex-col">
@@ -109,7 +128,9 @@ export default function Pattern() {
               max={179}
               step={1}
               value={width}
-              onChange={(e) => setWidth(Number.parseInt(e.target.value) || width)}
+              onChange={(e) =>
+                setWidth(Number.parseInt(e.target.value) || width)
+              }
             />
           </div>
         </fieldset>
@@ -153,14 +174,21 @@ export default function Pattern() {
             </>
           )}
           {method === 'uploading' && (
-            <FileUploadComponent width={width} numColors={colors} setPattern={setPattern} />
+            <FileUploadComponent
+              width={width}
+              numColors={colors}
+              setPattern={setPattern}
+            />
           )}
           {method === 'creating' && <p>Coming soon!</p>}
         </fieldset>
         <fieldset>
           {pattern && <ColorMatrixTable matrix={pattern} colors={color} />}
         </fieldset>
-        <SubmitButton className="border-b border-white rounded-lg px-2 py-1" text="save" />
+        <SubmitButton
+          className="border-b border-white rounded-lg px-2 py-1"
+          text="save"
+        />
       </Form>
     </>
   );

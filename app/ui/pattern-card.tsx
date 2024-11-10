@@ -18,7 +18,7 @@ const formatDate = (dateString: string) => {
     month: 'short',
     year: 'numeric',
   });
-}
+};
 
 export default function PatternCard({
   title,
@@ -40,15 +40,13 @@ export default function PatternCard({
         <div
           className="absolute top-2 right-2 rounded-full p-1 text-white z-10"
           style={{
-            backgroundColor: isPublic ? 'var(--color-success)' : 'var(--color-error)',
+            backgroundColor: isPublic
+              ? 'var(--color-success)'
+              : 'var(--color-error)',
             color: 'white',
           }}
         >
-          {isPublic ? (
-            <FaGlobe title="Public" />
-          ) : (
-            <FaLock title="Private" />
-          )}
+          {isPublic ? <FaGlobe title="Public" /> : <FaLock title="Private" />}
         </div>
       )}
 

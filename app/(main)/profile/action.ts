@@ -21,7 +21,7 @@ export async function getProfile() {
     const response = await fetch(`${apiUrl}/profile`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${token.value}`,
+        Authorization: `Bearer ${token.value}`,
         'Content-Type': 'application/json',
       },
     });
@@ -65,13 +65,13 @@ export async function uploadProfilePicture(file: File) {
     const response = await fetch(`${apiUrl}/profile/uploadPicture`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token.value}`,
+        Authorization: `Bearer ${token.value}`,
       },
       body: formData,
     });
 
     if (!response.ok) {
-      console.log(response)
+      console.log(response);
       const errorData = await response.json();
       return { error: errorData.message || 'Failed to upload profile picture' };
     }
@@ -86,7 +86,6 @@ export async function uploadProfilePicture(file: File) {
     return { error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }
-
 
 export async function logout() {
   // Clear the JWT cookie

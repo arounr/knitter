@@ -21,6 +21,17 @@ export const metadata: Metadata = {
   description: '',
 };
 
+const links = [
+  {
+    url: '/library',
+    name: 'Library',
+  },
+  {
+    url: '/catalog',
+    name: 'Catalog',
+  },
+];
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -34,7 +45,7 @@ export default async function RootLayout({
       <body
         className={`min-h-screen flex flex-col bg-[var(--color-background)] text-[var(--color-text-primary)] ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header loggedIn={loggedIn} />
+        <Header loggedIn={loggedIn} links={links} />
         <div className="flex-grow flex flex-col items-center justify-center w-full">
           {children}
         </div>

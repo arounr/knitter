@@ -14,9 +14,13 @@ export default async function LibraryPage() {
             Welcome to Your Private Library
           </h2>
           <p className="text-[var(--color-text-secondary)] mb-6">
-            This library is for logged-in users. Please log in to create and manage your collection of patterns.
+            This library is for logged-in users. Please log in to create and
+            manage your collection of patterns.
           </p>
-          <Link href="/login" className="px-5 py-2 bg-[var(--color-button-bg)] text-white rounded-md hover:bg-[var(--color-button-bg-hover)]">
+          <Link
+            href="/login"
+            className="px-5 py-2 bg-[var(--color-button-bg)] text-white rounded-md hover:bg-[var(--color-button-bg-hover)]"
+          >
             Log In
           </Link>
         </div>
@@ -26,8 +30,25 @@ export default async function LibraryPage() {
 
   return (
     <>
-
-      <PatternContent profile={profile} />
+      <div className="flex justify-center gap-4 mb-6">
+        <Link
+          href="/liked"
+          className="px-5 py-2 bg-[var(--color-button-bg)] text-white rounded-md hover:bg-[var(--color-button-bg-hover)]"
+        >
+          Liked Patterns
+        </Link>
+        <Link
+          href="/pattern"
+          className="px-5 py-2 bg-[var(--color-button-bg)] text-white rounded-md hover:bg-[var(--color-button-bg-hover)]"
+        >
+          Create Pattern
+        </Link>
+      </div>
+      <PatternContent
+        isPrivate={true}
+        showAuthor={false}
+        showPublicStatus={true}
+      />
     </>
   );
 }

@@ -2,6 +2,10 @@ import PatternContent from '@/ui/pattern-content';
 
 export default function CatalogPage() {
   return (
-    <PatternContent />
+    <PatternContent
+      showAuthor={true}
+      isPrivate={false}
+      showPublicStatus={false}
+    />
   );
 }
