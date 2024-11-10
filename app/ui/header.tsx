@@ -13,15 +13,14 @@ export default function Header({ loggedIn }: HeaderProps) {
 
   return (
     <header className="w-full flex items-center justify-between p-4 relative">
-      
+
       {/* Profile or Login Icon on the Right */}
       <div className="absolute right-4">
         {loggedIn ? (
           <Link href="/profile" passHref>
             <button
-              className={`flex items-center ${
-                pathname === '/profile' ? 'text-[var(--color-button-bg)]' : 'text-[var(--color-text-primary)]'
-              } hover:text-[var(--color-button-bg)]`}
+              className={`flex items-center ${pathname === '/profile' ? 'text-[var(--color-button-bg)]' : 'text-[var(--color-text-primary)]'
+                } hover:text-[var(--color-button-bg)]`}
             >
               <FiUser size={24} />
             </button>
@@ -29,9 +28,8 @@ export default function Header({ loggedIn }: HeaderProps) {
         ) : (
           <Link href="/login" passHref>
             <button
-              className={`flex items-center ${
-                pathname === '/login' ? 'text-[var(--color-button-bg)]' : 'text-[var(--color-text-primary)]'
-              } hover:text-[var(--color-button-bg)]`}
+              className={`flex items-center ${pathname === '/login' ? 'text-[var(--color-button-bg)]' : 'text-[var(--color-text-primary)]'
+                } hover:text-[var(--color-button-bg)]`}
             >
               <FiLogIn size={24} />
             </button>
@@ -42,13 +40,12 @@ export default function Header({ loggedIn }: HeaderProps) {
       <div className="mx-auto flex space-x-4 items-center">
         <Link
           href="/library"
-          className={`text-sm ${
-            pathname === '/library' ? 'text-[var(--color-button-bg)]' : 'text-[var(--color-text-secondary)]'
-          } hover:text-[var(--color-button-bg)]`}
+          className={`text-sm ${pathname === '/library' ? 'text-[var(--color-button-bg)]' : 'text-[var(--color-text-secondary)]'
+            } hover:text-[var(--color-button-bg)]`}
         >
           Library
         </Link>
-        
+
         {/* Centered Logo */}
         <Link href="/" className="text-lg font-semibold text-[var(--color-text-primary)] hover:text-[var(--color-button-bg)]">
           Knitter
@@ -56,9 +53,8 @@ export default function Header({ loggedIn }: HeaderProps) {
 
         <Link
           href="/catalog"
-          className={`text-sm ${
-            pathname === '/catalog' ? 'text-[var(--color-button-bg)]' : 'text-[var(--color-text-secondary)]'
-          } hover:text-[var(--color-button-bg)]`}
+          className={`text-sm ${pathname === '/catalog' ? 'text-[var(--color-button-bg)]' : 'text-[var(--color-text-secondary)]'
+            } hover:text-[var(--color-button-bg)]`}
         >
           Catalog
         </Link>

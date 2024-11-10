@@ -20,12 +20,12 @@ export async function register(formData: FormData) {
 
     if (!response.ok) {
       const errorData = await response.json();
-
+      console.log(errorData)
       if (response.status === 400 && errorData.errors) {
         return { error: Object.values(errorData.errors) };
       }
 
-      return { error: errorData.message || 'Registration failed' };
+      return { error: errorData.message || String(errorData) };
     }
 
     return { success: true };
@@ -34,7 +34,7 @@ export async function register(formData: FormData) {
     if (error instanceof TypeError && error.message.includes('fetch')) {
       return { error: 'Server is not responding.' };
     }
-    
+
     // Generic error fallback
     return { error: error instanceof Error ? error.message : 'Unknown error' };
   }

@@ -74,7 +74,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
           </p>
 
           <LikeButton
-            initialLikeCount={patternData.likeCount} 
+            initialLikeCount={patternData.likeCount}
             patternId={patternData.id}
             initialIsLiked={isPatternLiked}
             disabled={isLikeButtonDisabled}

@@ -26,6 +26,7 @@ export default async function LibraryPage() {
 
   return (
     <>
+
       <PatternContent profile={profile} />
     </>
   );
