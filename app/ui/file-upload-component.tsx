@@ -57,7 +57,7 @@ function FileUploadComponent({
           e.preventDefault();
           handleSubmit();
         }}
-        className="border-b border-white rounded-lg px-2 py-1"
+        className="m-4 px-5 py-2 bg-[var(--color-button-bg)] text-white rounded-md hover:bg-[var(--color-button-bg-hover)]"
       >
         Upload and Generate Pattern
       </button>

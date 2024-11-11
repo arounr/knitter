@@ -2,13 +2,32 @@
 
 import { cookies } from 'next/headers';
 
-export async function getLikedPatterns() {
+export async function getLikedPatterns(
+  page: number = 0,
+  size: number = 12,
+  title?: string | null,
+  username?: string | null,
+  sortBy?: string | null,
+  direction: boolean = true, // true for "asc", false for "desc"
+) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!apiUrl) {
     return { error: 'API URL is not defined' };
   }
 
-  // Retrieve the JWT token from cookies
+  let url = `${apiUrl}/users/likedPatterns?page=${page}&size=${size}`;
+
+  if (title) {
+    url += `&title=${encodeURIComponent(title)}`;
+  }
+  if (username) {
+    url += `&username=${encodeURIComponent(username)}`;
+  }
+  if (sortBy) {
+    url += `&sortBy=${encodeURIComponent(sortBy)}`;
+  }
+  url += `&direction=${direction ? 'asc' : 'desc'}`;
+
   const cookieStore = await cookies();
   const token = cookieStore.get('jwt');
 
@@ -16,18 +35,20 @@ export async function getLikedPatterns() {
     return { error: 'User is not authenticated' };
   }
 
+  const headers: HeadersInit = {
+    Authorization: `Bearer ${token.value}`,
+    'Content-Type': 'application/json',
+  };
+
   try {
-    const response = await fetch(`${apiUrl}/users/likedPatterns`, {
+    const response = await fetch(url, {
       method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token.value}`,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      return { error: errorData.message || 'Failed to fetch patterns' };
+      return { error: errorData.message || 'Failed to fetch liked patterns' };
     }
 
     const data = await response.json();
@@ -37,12 +58,9 @@ export async function getLikedPatterns() {
       currentPage: data.pageable.pageNumber,
     };
   } catch (error) {
-    // Check for network or fetch-specific error
     if (error instanceof TypeError && error.message.includes('fetch')) {
       return { error: 'Server is not responding.' };
     }
-
-    // Generic error fallback
     return { error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }

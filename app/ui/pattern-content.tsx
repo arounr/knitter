@@ -8,6 +8,7 @@ import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { Pattern } from '@/types/pattern';
 import { fetchPatterns } from '@/(main)/catalog/action';
 import { getLikedPatterns } from '@/(main)/liked/action';
+import { title } from 'process';
 
 interface PatternContentProps {
   isPrivate: boolean;
@@ -85,7 +86,14 @@ export default function PatternContent({
           isAsc,
         );
       } else {
-        result = await getLikedPatterns();
+        result = await getLikedPatterns(
+          page,
+          itemsPerPage,
+          titleSearchTerm,
+          authorSearchTerm,
+          sortOption,
+          isAsc,
+        );
       }
 
       if (result.error) {

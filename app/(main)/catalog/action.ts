@@ -9,7 +9,7 @@ export async function fetchPatterns(
   title?: string | null,
   username?: string | null,
   sortBy?: string | null,
-  direction: boolean = true // true for "asc", false for "desc"
+  direction: boolean = true, // true for "asc", false for "desc"
 ) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!apiUrl) {
