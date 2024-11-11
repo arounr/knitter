@@ -8,13 +8,12 @@ import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { Pattern } from '@/types/pattern';
 import { fetchPatterns } from '@/(main)/catalog/action';
 import { getLikedPatterns } from '@/(main)/liked/action';
-import { title } from 'process';
 
 interface PatternContentProps {
   isPrivate: boolean;
   showAuthor: boolean;
   showPublicStatus: boolean;
-  showLikedPatterns: boolean;
+  showLikedPatterns?: boolean;
 }
 
 export default function PatternContent({
@@ -115,6 +114,7 @@ export default function PatternContent({
     sortOption,
     isAsc,
     isPrivate,
+    showLikedPatterns,
   ]);
 
   const handlePatternClick = (id: number) => {

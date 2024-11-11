@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Form from 'next/form';
 import { newUrlPattern } from './action';
 import SubmitButton from '@/ui/submit-button';
@@ -20,12 +20,12 @@ export default function Pattern() {
   const [method, setMethod] = useState('');
   const [urlValue, setUrlValue] = useState('');
   const [width, setWidth] = useState(100);
-  const [pattern, setPattern] = useState<number[][] | null>(null); // Pattern as matrix
+  const [pattern, setPattern] = useState<number[][] | null>(null);
 
   const [displayedText, setDisplayedText] = useState('');
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentLetterIndex, setCurrentLetterIndex] = useState(0);
-  const words = ['url', 'uploading', 'creating'];
+  const words = useMemo(() => ['url', 'uploading', 'creating'], []);
 
   useEffect(() => {
     if (select) return;
@@ -51,29 +51,56 @@ export default function Pattern() {
   }, [select, currentWordIndex, currentLetterIndex, words]);
 
   return (
-    <>
-      <Form action="/pattern">
-        <h1>{name}</h1>
-        <fieldset className="flex flex-col space-y-4">
-          <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            required
-            minLength={1}
-            maxLength={128}
-            size={20}
-            onChange={(e) => setName(e.target.value)}
-            defaultValue=""
-            className="text-black"
-          />
-          <label htmlFor="public">Public:</label>
-          <input type="checkbox" id="public" name="public" defaultChecked />
-        </fieldset>
-        <fieldset>
+    <main className="flex flex-col items-center p-8 font-sans text-[var(--color-text-primary)]">
+      <section className="w-full max-w-2xl text-center mb-4">
+        <h1 className="text-3xl font-semibold text-[var(--color-text-primary)]">
+          Create a Pattern
+        </h1>
+        <p className="text-[var(--color-text-secondary)] text-sm mt-2">
+          Customize and save your pattern with various settings.
+        </p>
+      </section>
+
+      <section className="flex flex-col items-center w-full max-w-2xl p-8 space-y-6 bg-[var(--color-card-bg)] rounded-lg shadow-lg sm:p-12">
+        <Form action="/pattern" className="w-full space-y-6 flex flex-col">
           <div className="flex flex-col">
-            <label htmlFor="colors">Colors: {colors}</label>
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-[var(--color-text-secondary)]"
+            >
+              Pattern Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              minLength={1}
+              maxLength={128}
+              size={20}
+              onChange={(e) => setName(e.target.value)}
+              defaultValue=""
+              className="w-full px-4 py-2 mt-1 bg-[var(--color-input-bg)] rounded-md focus:ring-2 focus:ring-[var(--color-button-bg)] focus:outline-none"
+            />
+          </div>
+
+          <div className="flex items-center">
+            <label
+              htmlFor="public"
+              className="text-sm font-medium text-[var(--color-text-secondary)] mr-2"
+            >
+              Public
+            </label>
+            <input type="checkbox" id="public" name="public" defaultChecked />
+          </div>
+
+          <div className="flex flex-col">
+            <label
+              htmlFor="colors"
+              className="text-sm font-medium text-[var(--color-text-secondary)]"
+            >
+              Number of Colors: {colors}
+            </label>
             <input
               type="range"
               id="colors"
@@ -85,41 +112,47 @@ export default function Pattern() {
               onChange={(e) =>
                 setColors(Number.parseInt(e.target.value) || colors)
               }
+              className="w-full"
             />
           </div>
 
-          <ol className="flex flex-row space-x-4">
-            {color.map((stak, nr) =>
-              nr < colors ? (
-                <li key={'Color' + nr} className="flex flex-col items-center">
-                  <label htmlFor={'Color' + nr}>Color {nr + 1}</label>
+          <ol className="flex flex-wrap space-x-4">
+            {color.map((colorValue, index) =>
+              index < colors ? (
+                <li
+                  key={'Color' + index}
+                  className="flex flex-col items-center"
+                >
+                  <label
+                    htmlFor={'Color' + index}
+                    className="text-sm text-[var(--color-text-secondary)]"
+                  >
+                    Color {index + 1}
+                  </label>
                   <input
                     type="color"
-                    id={'Color' + nr}
-                    name={'Color' + nr}
-                    value={stak}
+                    id={'Color' + index}
+                    name={'Color' + index}
+                    value={colorValue}
                     onChange={(e) =>
                       setColor(
-                        color.map((stak2, nr2) =>
-                          nr2 === nr ? e.target.value : stak2,
-                        ),
+                        color.map((c, i) => (i === index ? e.target.value : c)),
                       )
                     }
-                    className="w-16 h-10 text-center"
+                    className="w-16 h-10 text-center rounded-md"
                   />
-                  <span className="text-sm mt-1">{stak}</span>
                 </li>
-              ) : (
-                <div
-                  key={'Color' + nr}
-                  className="flex flex-col items-center"
-                ></div>
-              ),
+              ) : null,
             )}
           </ol>
 
           <div className="flex flex-col">
-            <label htmlFor="width">Width {width}</label>
+            <label
+              htmlFor="width"
+              className="text-sm font-medium text-[var(--color-text-secondary)]"
+            >
+              Pattern Width: {width}
+            </label>
             <input
               type="range"
               id="width"
@@ -131,65 +164,78 @@ export default function Pattern() {
               onChange={(e) =>
                 setWidth(Number.parseInt(e.target.value) || width)
               }
+              className="w-full"
             />
           </div>
-        </fieldset>
-        <fieldset className="flex flex-col space-y-4">
-          <label htmlFor="avenue">Make a pattern by</label>
-          <select
-            name="avenue"
-            id="avenue"
-            className="text-black border rounded px-2 py-1"
-            onClick={() => setSelect(true)}
-            onChange={(e) => setMethod(e.target.value)}
-            value={method}
-          >
-            {!select && <option value="">{displayedText}</option>}
-            {words.map((stak) => (
-              <option value={stak} key={stak}>
-                {stak}
-              </option>
-            ))}
-          </select>
 
-          {method === 'url' && (
-            <>
-              <input
-                type="url"
-                className="border rounded px-2 py-1 text-black"
-                onChange={(e) => setUrlValue(e.target.value)}
+          <div className="flex flex-col space-y-4">
+            <label
+              htmlFor="avenue"
+              className="text-sm font-medium text-[var(--color-text-secondary)]"
+            >
+              Make a Pattern By
+            </label>
+            <select
+              name="avenue"
+              id="avenue"
+              className="w-full px-4 py-2 bg-[var(--color-input-bg)] rounded-md focus:ring-2 focus:ring-[var(--color-button-bg)] focus:outline-none"
+              onClick={() => setSelect(true)}
+              onChange={(e) => setMethod(e.target.value)}
+              value={method}
+            >
+              {!select && <option value="">{displayedText}</option>}
+              {words.map((option) => (
+                <option value={option} key={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+
+            {method === 'url' && (
+              <>
+                <input
+                  type="url"
+                  placeholder="Enter URL"
+                  className="w-full px-4 py-2 bg-[var(--color-input-bg)] rounded-md focus:ring-2 focus:ring-[var(--color-button-bg)] focus:outline-none"
+                  onChange={(e) => setUrlValue(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="w-full py-2 font-medium text-[var(--color-primary-text)] bg-[var(--color-button-bg)] rounded-md hover:bg-[var(--color-button-bg-hover)]"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    newUrlPattern(urlValue, width, colors).then((data) => {
+                      if (typeof data === 'string')
+                        setPattern(JSON.parse(data));
+                    });
+                  }}
+                >
+                  Generate Pattern
+                </button>
+              </>
+            )}
+            {method === 'uploading' && (
+              <FileUploadComponent
+                width={width}
+                numColors={colors}
+                setPattern={setPattern}
               />
-              <button
-                type="button"
-                className="border-b border-white rounded-lg px-2 py-1"
-                onClick={(e) => {
-                  e.preventDefault();
-                  newUrlPattern(urlValue, width, colors).then((data) => {
-                    if (typeof data === 'string') setPattern(JSON.parse(data));
-                  });
-                }}
-              >
-                Make pattern
-              </button>
-            </>
-          )}
-          {method === 'uploading' && (
-            <FileUploadComponent
-              width={width}
-              numColors={colors}
-              setPattern={setPattern}
-            />
-          )}
-          {method === 'creating' && <p>Coming soon!</p>}
-        </fieldset>
-        <fieldset>
-          {pattern && <ColorMatrixTable matrix={pattern} colors={color} />}
-        </fieldset>
-        <SubmitButton
-          className="border-b border-white rounded-lg px-2 py-1"
-          text="save"
-        />
-      </Form>
-    </>
+            )}
+            {method === 'creating' && (
+              <p className="text-[var(--color-text-secondary)]">Coming soon!</p>
+            )}
+          </div>
+
+          <div className="w-full">
+            {pattern && <ColorMatrixTable matrix={pattern} colors={color} />}
+          </div>
+
+          <SubmitButton
+            className="w-full py-2 font-medium text-[var(--color-primary-text)] bg-[var(--color-button-bg)] rounded-md hover:bg-[var(--color-button-bg-hover)] focus:ring-2 focus:ring-[var(--color-button-bg)] focus:outline-none"
+            text="Save Pattern"
+          />
+        </Form>
+      </section>
+    </main>
   );
 }
