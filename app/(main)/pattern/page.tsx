@@ -21,7 +21,6 @@ export default function Pattern() {
   const [urlValue, setUrlValue] = useState('');
   const [width, setWidth] = useState(100);
   const [pattern, setPattern] = useState<number[][] | null>(null);
-
   const [displayedText, setDisplayedText] = useState('');
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentLetterIndex, setCurrentLetterIndex] = useState(0);
