@@ -79,8 +79,8 @@ export default function PatternEditingPage() {
   }, [width, rows]);
 
   return (
-    <main className="mt-8">
-      <div className="mt-8 p-4 max-w-lg mx-auto">
+    <main className="mt-8 flex flex-col items-center">
+      <div className="mt-8 p-4 w-[500px] mx-auto">
         {/* Pattern Name and Public Checkbox */}
         <div className="flex justify-between mb-4">
           <div className="flex flex-col w-full mr-4">
