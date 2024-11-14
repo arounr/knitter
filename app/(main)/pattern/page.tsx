@@ -54,7 +54,7 @@ export default function Pattern() {
     <main className="flex flex-col items-center p-8 font-sans text-[var(--color-text-primary)]">
       <section className="w-full max-w-2xl text-center mb-4">
         <h1 className="text-3xl font-semibold text-[var(--color-text-primary)]">
-          Create a Pattern
+          Create a Pattern (WIP)
         </h1>
         <p className="text-[var(--color-text-secondary)] text-sm mt-2">
           Customize and save your pattern with various settings.

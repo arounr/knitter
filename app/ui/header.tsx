@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FiUser, FiLogIn } from 'react-icons/fi';
+import { FiLogIn, FiSettings } from 'react-icons/fi';
 import { usePathname } from 'next/navigation';
 
 interface HeaderProps {
@@ -30,7 +30,7 @@ export default function Header({ loggedIn, links }: HeaderProps) {
                   : 'text-[var(--color-text-primary)]'
               } hover:text-[var(--color-button-bg)]`}
             >
-              <FiUser size={24} />
+              <FiSettings size={24} />
             </button>
           </Link>
         ) : (

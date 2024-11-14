@@ -50,6 +50,7 @@ function FileUploadComponent({
         type="file"
         onChange={(e) => e.target.files && setFile(e.target.files[0])}
         className="border rounded px-2 py-1 bg-white text-black"
+        accept="image/png, image/jpeg"
       />
       <button
         type="button"

@@ -1,7 +1,7 @@
 export type User = {
-    id: number;
-    username: string;
-    profilePicture: string;
-    likedPatternIds: number[];
-  };
-  
+  id: number;
+  username: string;
+  likedPatternIds: number[];
+  profilePicture: string;
+  joinDate: string;
+};

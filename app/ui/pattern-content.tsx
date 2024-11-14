@@ -117,10 +117,6 @@ export default function PatternContent({
     showLikedPatterns,
   ]);
 
-  const handlePatternClick = (id: number) => {
-    router.push(`/pattern/${id}`);
-  };
-
   return (
     <div className="flex flex-col items-center p-4 space-y-8">
       <div className="max-w-4xl w-full space-y-8 relative">
@@ -154,13 +150,14 @@ export default function PatternContent({
               {patterns.length ? (
                 patterns.map((pattern) => (
                   <PatternCard
+                    id={pattern.id}
                     key={pattern.id}
                     title={pattern.title}
                     author={showAuthor ? pattern.ownerUsername : undefined}
                     imageUrl={pattern.imageUrl || undefined}
                     date={pattern.creationDate}
                     likes={pattern.likeCount}
-                    onClick={() => handlePatternClick(pattern.id)}
+                    //onClick={() => handlePatternClick(pattern.id)}
                     isPublic={showPublicStatus ? pattern.isPublic : undefined}
                   />
                 ))
