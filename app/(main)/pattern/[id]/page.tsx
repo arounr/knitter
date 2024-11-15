@@ -19,8 +19,7 @@ const formatDate = (dateString: string) => {
     minute: 'numeric',
     second: 'numeric',
   });
-}
-
+};
 
 export default async function PatternPage({ params }: PatternPageProps) {
   const { id } = await params;
@@ -31,14 +30,19 @@ export default async function PatternPage({ params }: PatternPageProps) {
   // Handle errors
   if ('error' in patternData) {
     return (
-      <ErrorMessage headerTitle="Error Loading Pattern" message={patternData.error} />
+      <ErrorMessage
+        headerTitle="Error Loading Pattern"
+        message={patternData.error}
+      />
     );
   }
 
   // Fetch profile data and determine if the like button should be disabled
-  const profile = await getProfile() as User;
+  const profile = (await getProfile()) as User;
   const isLikeButtonDisabled = 'error' in profile;
-  const isPatternLiked = !isLikeButtonDisabled && profile.likedPatternIds.some(num => num.toString().includes(id));
+  const isPatternLiked =
+    !isLikeButtonDisabled &&
+    profile.likedPatternIds.some((num) => num.toString().includes(id));
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-[var(--color-card-bg)] shadow-lg rounded-lg">
@@ -66,11 +70,18 @@ export default async function PatternPage({ params }: PatternPageProps) {
 
         {/* Information Section */}
         <div className="mt-6 md:mt-0 md:ml-8 flex-grow">
-          <h1 className="text-3xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+          <h1
+            className="text-3xl font-semibold"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
             {patternData.title}
           </h1>
-          <p className="text-lg mt-2" style={{ color: 'var(--color-text-secondary)' }}>
-            Created by <span className="font-medium">{patternData.ownerUsername}</span>
+          <p
+            className="text-lg mt-2"
+            style={{ color: 'var(--color-text-secondary)' }}
+          >
+            Created by{' '}
+            <span className="font-medium">{patternData.ownerUsername}</span>
           </p>
 
           <LikeButton
@@ -80,23 +91,26 @@ export default async function PatternPage({ params }: PatternPageProps) {
             disabled={isLikeButtonDisabled}
           />
 
-          <p className="mt-4 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+          <p
+            className="mt-4 text-sm"
+            style={{ color: 'var(--color-text-secondary)' }}
+          >
             <strong>Created on:</strong> {formatDate(patternData.creationDate)}
           </p>
-          <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-            <strong>Last Modified:</strong> {formatDate(patternData.modificationDate)}
+          <p
+            className="text-sm"
+            style={{ color: 'var(--color-text-secondary)' }}
+          >
+            <strong>Last Modified:</strong>{' '}
+            {formatDate(patternData.modificationDate)}
           </p>
 
           {/* Buttons Section */}
           <div className="mt-4 flex gap-4">
-            <button
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-            >
+            <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
               Commit Pattern
             </button>
-            <button
-              className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-            >
+            <button className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
               Save to Library
             </button>
           </div>
