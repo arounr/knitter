@@ -1,12 +1,28 @@
-import { redirect } from 'next/navigation';
 import { getProfile, logout } from './action';
 import ProfilePicture from '@/ui/profile-picture';
+import ErrorMessage from '@/ui/error-message';
 
 export default async function ProfilePage() {
   const profile = await getProfile();
 
-  if (profile.error) {
-    redirect('/');
+  if (/Invalid|expired/.test(profile.error)) {
+    // Token is invalid or expired
+    return (
+      <ErrorMessage
+        headerTitle="Session Expired"
+        message="Your session has expired or is invalid. Please log in again."
+        buttonTitle="Return to Login"
+        clickAction={logout}
+      />
+    );
+  } else if (profile.error) {
+    // Other error (likely server not open)
+    return (
+      <ErrorMessage
+        headerTitle="Error"
+        message="An unexpected error occurred while fetching your profile. Please try again later."
+      />
+    );
   }
 
   const { username, profilePicture } = profile;

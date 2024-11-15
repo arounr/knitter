@@ -13,6 +13,7 @@
   --color-input-bg: #f1f3f5; /* Very light gray for inputs */
   --color-error: #dc3545; /* Red for error messages or indicators */
   --color-success: #28a745; /* Green for success indicators */
+  --color-white-text: #f8f9fa; /* For white text (dark and light mode) */
 }
 
 /* Dark Mode */
