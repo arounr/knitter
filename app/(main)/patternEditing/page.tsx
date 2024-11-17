@@ -2,8 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import SubmitButton from '@/ui/submit-button';
+import { getPatternById } from '../pattern/[id]/action';
+import { patternMatrixToGrid } from './action';
 
 export default function PatternEditingPage() {
+  //(patternId: string) {
   const [name, setName] = useState(' ');
   const [colors, setColors] = useState(4);
   const [color, setColor] = useState([
@@ -13,12 +16,36 @@ export default function PatternEditingPage() {
     '#F7D794',
   ]);
   const [width, setWidth] = useState(30);
+  const [isPublic, setIsPublic] = useState(true);
   const [rows, setRows] = useState(30);
   const [tempWidth, setTempWidth] = useState(width);
   const [tempRows, setTempRows] = useState(rows);
   const [grid, setGrid] = useState<number[][]>([]); // Store color indices as numbers (0, 1, 2, 3)
   const [activeColorIndex, setActiveColorIndex] = useState(0); // Track the selected color index
   const [history, setHistory] = useState<any[]>([]);
+
+  //mock pattern to render into grid
+  let patternId = '123';
+  const patternData = {
+    title: 'þetta er titill',
+    colorCodes: ['#4287f5', '#300ec7', '#c70e30', '#ad6a76'],
+    patternMatrix: ['0123', '3012', '2301', '1230'],
+    isPublic: false,
+  };
+
+  useEffect(() => {
+    if (patternId) {
+      //getPatternById(patternID).then((patternData) => {
+      setName(patternData.title);
+      setIsPublic(patternData.isPublic);
+      setColor(patternData.colorCodes);
+      setWidth(patternData.patternMatrix[0].length);
+      setRows(patternData.patternMatrix.length);
+      setGrid(patternMatrixToGrid(patternData.patternMatrix, rows, width));
+      patternId = '';
+      //})
+    }
+  }, [patternId]);
 
   const handleGridCellClick = (rowIdx: number, colIdx: number) => {
     saveToHistory();
@@ -78,6 +105,8 @@ export default function PatternEditingPage() {
     });
   }, [width, rows]);
 
+  const defaultName = patternData ? patternData.title : '';
+
   return (
     <main className="mt-8 flex flex-col items-center">
       <div className="mt-8 p-4 w-[500px] mx-auto">
@@ -99,7 +128,7 @@ export default function PatternEditingPage() {
               maxLength={128}
               size={20}
               onChange={(e) => setName(e.target.value)}
-              defaultValue=""
+              defaultValue={defaultName}
               className="w-full px-4 py-2 mt-1 bg-[var(--color-input-bg)] rounded-md focus:ring-2 focus:ring-[var(--color-button-bg)] focus:outline-none"
             />
           </div>
@@ -110,28 +139,19 @@ export default function PatternEditingPage() {
             >
               Public
             </label>
-            <input type="checkbox" id="public" name="public" defaultChecked />
+            <input
+              type="checkbox"
+              id="public"
+              name="public"
+              checked={isPublic}
+              onChange={(e) => setIsPublic(e.target.checked)}
+            />
           </div>
         </div>
 
         {/* Width and Rows Selector with Apply Changes */}
         <section className="flex flex-col items-center p-4 border border-[var(--color-text-secondary)] rounded-md mb-4">
           <div className="flex justify-between w-full mb-4">
-            {/* Width Input */}
-            <div className="flex items-center">
-              <label className="mr-2 text-sm font-medium text-[var(--color-text-secondary)]">
-                Set Width:
-              </label>
-              <input
-                type="number"
-                min={1}
-                max={100}
-                value={tempWidth}
-                onChange={(e) => setTempWidth(Number(e.target.value))}
-                className="w-20 h-8 text-center bg-[var(--color-input-bg)] border border-gray-300 rounded p-2"
-              />
-            </div>
-
             {/* Rows Input */}
             <div className="flex items-center ml-4">
               <label className="mr-2 text-sm font-medium text-[var(--color-text-secondary)]">
@@ -140,9 +160,24 @@ export default function PatternEditingPage() {
               <input
                 type="number"
                 min={1}
-                max={100}
+                max={200}
                 value={tempRows}
                 onChange={(e) => setTempRows(Number(e.target.value))}
+                className="w-20 h-8 text-center bg-[var(--color-input-bg)] border border-gray-300 rounded p-2"
+              />
+            </div>
+
+            {/* Width Input */}
+            <div className="flex items-center">
+              <label className="mr-2 text-sm font-medium text-[var(--color-text-secondary)]">
+                Set Width:
+              </label>
+              <input
+                type="number"
+                min={1}
+                max={179}
+                value={tempWidth}
+                onChange={(e) => setTempWidth(Number(e.target.value))}
                 className="w-20 h-8 text-center bg-[var(--color-input-bg)] border border-gray-300 rounded p-2"
               />
             </div>
