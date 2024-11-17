@@ -1,94 +1,64 @@
 'use server';
 
-import { cookies } from 'next/headers';
+import { getApiUrl, ServerError } from '@/utils/apiUtils';
+import { getAuthHeaders, handleResponse } from '@/utils/serverApiUtils';
 
 export async function getPatternById(id: string) {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (!apiUrl) {
-    return { error: 'API URL is not defined' };
-  }
-
-  // Retrieve the JWT token from cookies
-  const cookieStore = await cookies();
-  const token = cookieStore.get('jwt')?.value;
-
   try {
-    // Prepare headers based on token availability
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
+    const apiUrl = getApiUrl();
+    if (!apiUrl) throw ServerError;
 
-    // Fetch the pattern data from the backend
-    const response = await fetch(`${apiUrl}/patterns/${id}`, {
-      method: 'GET',
-      headers,
-    });
+    const headers = await getAuthHeaders();
 
-    // Check if the pattern was found
-    if (response.status === 404) {
-      return { error: `Pattern with ID ${id} not found.` };
-    }
-
-    // Check for unauthorized access
-    if (response.status === 401 || response.status === 403) {
-      return { error: 'You are not authorized to view this pattern.' };
-    }
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      return { error: errorData.message || 'Failed to fetch pattern data.' };
-    }
-
-    // Parse and return the pattern data
-    const patternData = await response.json();
-    return patternData;
+    const response = await fetch(`${apiUrl}/patterns/${id}`, { headers });
+    return await handleResponse(response);
   } catch (error) {
-    if (error instanceof TypeError && error.message.includes('fetch')) {
-      return { error: 'Server is not responding.' };
-    }
-    // Generic error fallback
-    return { error: error instanceof Error ? error.message : 'Unknown error' };
+    return {
+      error: error instanceof Error ? error.message : 'Unknown error occurred.',
+      code: 500,
+    };
   }
 }
 
 export async function likeUnlikePattern(patternId: string) {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (!apiUrl) {
-    throw new Error('API URL is not defined');
-  }
-
-  // Retrieve the JWT token from cookies
-  const cookieStore = await cookies();
-  const token = cookieStore.get('jwt');
-
-  if (!token) {
-    throw new Error('User is not authenticated');
-  }
-
   try {
+    const apiUrl = getApiUrl();
+    if (!apiUrl) throw ServerError;
+
+    const headers = await getAuthHeaders();
+
     const response = await fetch(`${apiUrl}/patterns/like/${patternId}`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token.value}`,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to toggle like status');
-    }
-
-    return { success: true };
+    return await handleResponse(response);
   } catch (error) {
-    if (error instanceof TypeError && error.message.includes('fetch')) {
-      throw new Error('Server is not responding.');
-    }
-
-    return { error: error instanceof Error ? error.message : 'Unknown error' };
+    return {
+      error: error instanceof Error ? error.message : 'Unknown error occurred.',
+      code: 500,
+    };
   }
 }
 
+export async function saveToLibrary(patternId: string) {
+  try {
+    const apiUrl = getApiUrl();
+    if (!apiUrl) throw ServerError;
+
+    const headers = await getAuthHeaders();
+
+    const response = await fetch(`${apiUrl}/patterns/save/${patternId}`, {
+      method: 'POST',
+      headers,
+    });
+
+    const result = await handleResponse(response);
+
+    return result;
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : 'Unknown error occurred.',
+      code: 500,
+    };
+  }
+}

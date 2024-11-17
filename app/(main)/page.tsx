@@ -1,10 +1,6 @@
-import { fetchPatterns } from './catalog/action';
 import PatternCard from '@/ui/pattern-card';
-import ErrorMessage from '@/ui/error-message';
 import { Pattern } from '@/types/pattern';
-import FormattedDate from '@/ui/formatted-date';
 import Link from 'next/link';
-import PatternContent from '@/ui/pattern-content';
 import { getMostLikedPatterns } from './action';
 import Image from 'next/image';
 
@@ -12,7 +8,7 @@ const mostLikedPatterns = (await getMostLikedPatterns(6)) as Pattern[];
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center px-4">
+    <div className="flex flex-col items-center justify-center px-4">
       <div className="mt-12 mb-12">
         <h1 className="text-4xl font-bold">Welcome to Knitter</h1>
         <h2>the knitting machine pattern making plaform</h2>
@@ -58,7 +54,7 @@ export default function Home() {
       )}
 
       {/*"Create Your Own Pattern" section */}
-      <div className="relative group w-full h-72 mt-4 mb-4 rounded-lg overflow-hidden">
+      <div className="relative group w-1/3 h-52 mt-4 mb-4 rounded-lg overflow-hidden">
         <Image
           src="/images/ragnheidur2.png"
           alt="Banner"

@@ -5,10 +5,12 @@ import Image from 'next/image';
 import { useRef, ChangeEvent, useState } from 'react';
 
 interface ProfilePictureProps {
-  profilePicture?: string;
+  profilePicture: string | null;
 }
 
-export default function ProfilePicture({ profilePicture }: ProfilePictureProps) {
+export default function ProfilePicture({
+  profilePicture,
+}: ProfilePictureProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,7 +26,7 @@ export default function ProfilePicture({ profilePicture }: ProfilePictureProps) 
     setError(null); // Clear any previous errors if file size is acceptable
     if (file) {
       const result = await uploadProfilePicture(file);
-      if (result.error) {
+      if ('error' in result) {
         setError(result.error);
       }
     }
@@ -34,7 +36,10 @@ export default function ProfilePicture({ profilePicture }: ProfilePictureProps) 
     <div className="flex flex-col items-center space-y-4">
       <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200">
         <Image
-          src={profilePicture || 'https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg'}
+          src={
+            profilePicture ||
+            'https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg'
+          }
           alt="Profile Picture"
           width={96}
           height={96}

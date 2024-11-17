@@ -11,7 +11,12 @@ interface LikeButtonProps {
   disabled?: boolean;
 }
 
-export default function LikeButton({ initialLikeCount, patternId, initialIsLiked, disabled = false }: LikeButtonProps) {
+export default function LikeButton({
+  initialLikeCount,
+  patternId,
+  initialIsLiked,
+  disabled = false,
+}: LikeButtonProps) {
   const [likeCount, setLikeCount] = useState(initialLikeCount);
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [isPending, startTransition] = useTransition();
@@ -19,27 +24,25 @@ export default function LikeButton({ initialLikeCount, patternId, initialIsLiked
 
   const handleLikeToggle = () => {
     if (disabled) return;
-  
-    // Optimistically update the UI
+
     setLikeCount(likeCount + (isLiked ? -1 : 1));
     setIsLiked(!isLiked);
     setIsAnimating(true);
-  
+
     startTransition(async () => {
       const result = await likeUnlikePattern(patternId);
-  
+
       // Check for an error in the result
-      if (result.error) {
+      if ('error' in result) {
         setLikeCount(likeCount + (isLiked ? 1 : 0));
         setIsLiked(isLiked);
         console.error('Error toggling like status:', result.error);
       }
-  
+
       // Stop animation after a delay
       setTimeout(() => setIsAnimating(false), 300);
     });
   };
-  
 
   return (
     <button

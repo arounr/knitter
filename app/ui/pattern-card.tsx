@@ -1,21 +1,24 @@
+// ui/pattern-card.tsx
 'use client';
 
+import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FaHeart, FaLock, FaGlobe } from 'react-icons/fa';
 import FormattedDate from './formatted-date';
 
 interface PatternCardProps {
-  id: number;
+  id: string; // Adjusted to number as per your old implementation
   title: string;
   author?: string;
   imageUrl?: string;
   date: string;
   likes: number;
   isPublic?: boolean;
+  showPublicStatus?: boolean; // New prop to control public status display
 }
 
-export default function PatternCard({
+const PatternCard: React.FC<PatternCardProps> = ({
   id,
   title,
   author,
@@ -23,20 +26,30 @@ export default function PatternCard({
   date,
   likes,
   isPublic,
-}: PatternCardProps) {
+  showPublicStatus = true, // Defaults to true
+}) => {
   const router = useRouter();
 
+  /**
+   * Handles the card click event.
+   * Navigates to the pattern's detail page.
+   */
+  const handleCardClick = () => {
+    router.push(`/pattern/${id}`);
+  };
+
+  /**
+   * Handles the author name click event.
+   * Navigates to the author's page.
+   * Prevents the event from bubbling up to the card click handler.
+   *
+   * @param event - The mouse click event
+   */
   const handleAuthorClick = (event: React.MouseEvent) => {
-    // Prevent the click event from bubbling up to the card
-    event.stopPropagation();
+    event.stopPropagation(); // Prevents triggering the card's onClick
     if (author) {
       router.push(`/user/${author}`);
     }
-  };
-
-  const handleCardClick = () => {
-    // Navigate to the pattern detail page
-    router.push(`/pattern/${id}`);
   };
 
   return (
@@ -45,13 +58,14 @@ export default function PatternCard({
       className="w-40 h-56 p-4 bg-[var(--color-background)] shadow-md rounded-lg flex flex-col justify-between relative overflow-hidden cursor-pointer"
       style={{ color: 'var(--color-text-primary)' }}
     >
-      {isPublic !== undefined && (
+      {/* Conditional Rendering of Public/Private Status */}
+      {showPublicStatus && isPublic !== undefined && (
         <div
           className="absolute top-2 right-2 rounded-full p-1 text-white z-10"
           style={{
             backgroundColor: isPublic
-              ? 'var(--color-success)'
-              : 'var(--color-error)',
+              ? 'var(--color-success)' // Color for Public
+              : 'var(--color-error)', // Color for Private
             color: 'white',
           }}
         >
@@ -59,26 +73,28 @@ export default function PatternCard({
         </div>
       )}
 
+      {/* Image Section */}
       <div className="w-full h-32 overflow-hidden flex items-center justify-center relative z-0">
         {imageUrl ? (
-          <div className="relative w-full h-full">
-            <Image
-              src={imageUrl}
-              alt={`${title} pattern`}
-              fill
-              style={{
-                objectFit: 'contain',
-                borderRadius: 'inherit',
-                imageRendering: 'pixelated',
-              }}
-              unoptimized
-            />
-          </div>
+          <Image
+            src={imageUrl}
+            alt={title}
+            width={96}
+            height={96}
+            style={{
+              objectFit: 'contain',
+              imageRendering: 'pixelated',
+              maxWidth: '100%',
+              maxHeight: '100%',
+            }}
+            unoptimized
+          />
         ) : (
           <div className="text-gray-500">No Image Available</div>
         )}
       </div>
 
+      {/* Title Section */}
       <h3
         className="text-center font-medium mt-2 truncate"
         style={{
@@ -94,7 +110,7 @@ export default function PatternCard({
         {title}
       </h3>
 
-      {/* Clickable author name without interfering with the card click */}
+      {/* Author Section */}
       {author && (
         <p
           className="text-sm text-center mb-2"
@@ -102,7 +118,7 @@ export default function PatternCard({
         >
           by{' '}
           <span
-            onClick={handleAuthorClick}
+            onClick={handleAuthorClick} // Attach navigation to author click
             className="underline hover:text-blue-600 cursor-pointer"
           >
             {author}
@@ -110,16 +126,20 @@ export default function PatternCard({
         </p>
       )}
 
+      {/* Date and Likes Section */}
       <div
         className="flex justify-between items-center text-xs mt-2"
         style={{ color: 'var(--color-text-secondary)' }}
       >
-        {/* Use FormattedDate component to render the date */}
+        {/* Render the formatted date */}
         <FormattedDate dateString={date} />
+        {/* Display the number of likes with a heart icon */}
         <div className="flex items-center">
           <FaHeart className="mr-1 text-red-500" /> {likes}
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default PatternCard;

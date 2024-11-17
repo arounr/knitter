@@ -10,8 +10,7 @@ import {
 } from '@/utils/apiUtils';
 import { getAuthHeaders, handleResponse } from '@/utils/serverApiUtils';
 
-export async function fetchPatterns(
-  isPrivate: boolean, // Specify whether to fetch private (library) or public (catalog) patterns
+export async function getLikedPatterns(
   page: number = 0,
   size: number = 12,
   title?: string | null,
@@ -23,10 +22,8 @@ export async function fetchPatterns(
     const apiUrl = getApiUrl();
     if (!apiUrl) throw ServerError;
 
-    // Base path depends on `isPrivate`
-    const basePath = isPrivate ? 'private' : 'public';
+    const headers = await getAuthHeaders();
 
-    // Build query string
     const queryString = buildQueryString({
       page,
       size,
@@ -36,21 +33,15 @@ export async function fetchPatterns(
       direction: direction ? 'asc' : 'desc',
     });
 
-    const url = `${apiUrl}/patterns/${basePath}?${queryString}`;
+    const url = `${apiUrl}/users/likedPatterns?${queryString}`;
 
-    // Headers depend on whether the request is private
-    const headers = isPrivate
-      ? await getAuthHeaders()
-      : { 'Content-Type': 'application/json' };
+    const response = await fetch(url, {
+      method: 'GET',
+      headers,
+    });
 
-    // Fetch data from the API
-    const response = await fetch(url, { method: 'GET', headers });
-
-    const result = await handleResponse<PaginatedResponse<Pattern>>(response);
-
-    return result;
+    return await handleResponse<PaginatedResponse<Pattern>>(response);
   } catch (error) {
-    // Return consistent error response
     return {
       error: error instanceof Error ? error.message : 'Unknown error occurred.',
       code: 500,

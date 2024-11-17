@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Form from 'next/form';
 import { newUrlPattern } from './action';
 import SubmitButton from '@/ui/submit-button';
-import ColorMatrixTable from '@/ui/color-matrix-table';
+import ColorMatrixTable from '@/component/color-matrix-table';
 import FileUploadComponent from '@/ui/file-upload-component';
 
 export default function Pattern() {
@@ -15,7 +15,7 @@ export default function Pattern() {
     '#CDB4DB',
     '#F7D794',
   ]);
-  const [name, setName] = useState('');
+  const [_, setName] = useState('');
   const [select, setSelect] = useState(false);
   const [method, setMethod] = useState('');
   const [urlValue, setUrlValue] = useState('');

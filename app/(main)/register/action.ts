@@ -1,15 +1,22 @@
 'use server';
 
-export async function register(formData: FormData) {
-  const username = formData.get('username') as string;
-  const password = formData.get('password') as string;
+import { ApiResponse, getApiUrl, ServerError } from '@/utils/apiUtils';
+import { handleResponse } from '@/utils/serverApiUtils';
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (!apiUrl) {
-    return { error: 'API URL is not defined' };
-  }
-
+export async function register(
+  formData: FormData,
+): Promise<ApiResponse<{ success: boolean }>> {
   try {
+    const username = formData.get('username') as string;
+    const password = formData.get('password') as string;
+
+    if (!username || !password) {
+      return { error: 'Username and password are required.', code: 400 };
+    }
+
+    const apiUrl = getApiUrl();
+    if (!apiUrl) throw ServerError;
+
     const response = await fetch(`${apiUrl}/users`, {
       method: 'POST',
       headers: {
@@ -18,24 +25,24 @@ export async function register(formData: FormData) {
       body: JSON.stringify({ username, password }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.log(errorData)
-      if (response.status === 400 && errorData.errors) {
-        return { error: Object.values(errorData.errors) };
+    const result = await handleResponse<{ success: boolean }>(response);
+
+    if ('error' in result) {
+      if (result.code === 400 && result.error) {
+        return {
+          error: Object.values(result.error).join(', '),
+          code: 400,
+        };
       }
 
-      return { error: errorData.message || String(errorData) };
+      return result;
     }
 
-    return { success: true };
+    return { data: { success: true }, code: result.code };
   } catch (error) {
-    // Check for network or fetch-specific error
-    if (error instanceof TypeError && error.message.includes('fetch')) {
-      return { error: 'Server is not responding.' };
-    }
-
-    // Generic error fallback
-    return { error: error instanceof Error ? error.message : 'Unknown error' };
+    return {
+      error: error instanceof Error ? error.message : 'Unknown error occurred.',
+      code: 500,
+    };
   }
 }

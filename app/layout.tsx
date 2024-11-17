@@ -46,9 +46,7 @@ export default async function RootLayout({
         className={`min-h-screen flex flex-col bg-[var(--color-background)] text-[var(--color-text-primary)] ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header loggedIn={loggedIn} links={links} />
-        <div className="flex-grow flex flex-col items-center justify-center w-full">
-          {children}
-        </div>
+        {children}
         <Footer />
       </body>
     </html>
