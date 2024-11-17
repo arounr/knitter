@@ -15,7 +15,7 @@ export default function Pattern() {
     '#CDB4DB',
     '#F7D794',
   ]);
-  const [_, setName] = useState('');
+  const [name, setName] = useState('');
   const [select, setSelect] = useState(false);
   const [method, setMethod] = useState('');
   const [urlValue, setUrlValue] = useState('');

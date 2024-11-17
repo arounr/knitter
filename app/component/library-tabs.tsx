@@ -44,8 +44,11 @@ const LibraryTabs = () => {
           sortOption,
           isAsc,
         );
-      } else {
-        const isPrivate = activeTab === 'private';
+      } else if (activeTab === 'shared') {
+        // TODO: shared patterns
+        alert('TODO');
+      } else if (activeTab === 'private') {
+        const isPrivate = true;
         result = await fetchPatterns(
           isPrivate,
           currentPage,

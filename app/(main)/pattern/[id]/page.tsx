@@ -25,10 +25,10 @@ const formatDate = (dateString: string) => {
 };
 
 const PatternPage = async ({ params }: PatternPageProps) => {
-  const { id } = await params;
+  const { id: patternId } = await params;
 
   // Fetch pattern data from the server
-  const patternResult = await getPatternById(id);
+  const patternResult = await getPatternById(patternId);
 
   if ('error' in patternResult) {
     return (
@@ -43,20 +43,18 @@ const PatternPage = async ({ params }: PatternPageProps) => {
 
   const profileResult = await getProfile();
 
-  if ('error' in profileResult) {
-    return (
-      <ErrorMessage
-        headerTitle="Error Loading Profile"
-        message={profileResult.error}
-      />
-    );
-  }
+  // if logged in
+  let profile;
+  let isOwner;
+  let isPatternLiked;
+  if ('data' in profileResult) {
+    profile = profileResult.data as User;
+    isOwner = profile.username === patternData.ownerUsername;
 
-  const profile = profileResult.data as User;
-  const isOwner = profile.username === patternData.ownerUsername;
-  const isPatternLiked = profile.likedPatternIds.some((num) =>
-    num.toString().includes(id),
-  );
+    isPatternLiked = profile.likedPatternIds
+      .map((id) => id.toString())
+      .includes(patternId);
+  }
 
   return (
     <div
@@ -104,8 +102,8 @@ const PatternPage = async ({ params }: PatternPageProps) => {
             <LikeButton
               initialLikeCount={patternData.likeCount}
               patternId={patternData.id}
-              initialIsLiked={isPatternLiked}
-              disabled={false}
+              initialIsLiked={isPatternLiked || false}
+              disabled={profile ? false : true}
             />
 
             <p
@@ -130,13 +128,13 @@ const PatternPage = async ({ params }: PatternPageProps) => {
               </button>
               {isOwner ? (
                 <Link
-                  href={`/pattern/edit/${id}`}
+                  href={`/pattern/edit/${patternId}`}
                   className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 text-center"
                 >
                   Edit Pattern
                 </Link>
               ) : (
-                <SaveToLibraryButton patternId={id} />
+                <SaveToLibraryButton patternId={patternId} />
               )}
             </div>
           </div>
