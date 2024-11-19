@@ -35,15 +35,14 @@ export default function Home() {
                 likes={pattern.likeCount}
                 isPublic={true}
               />
-
-              <Link
-                href="/catalog"
-                className="text-[var(--color-button-bg)] hover:text-[var(--color-button-bg-hover)] underline font-medium"
-              >
-                View Catalog
-              </Link>
             </div>
           ))}
+          <Link
+            href="/catalog"
+            className="col-span-full text-[var(--color-button-bg)] hover:text-[var(--color-button-bg-hover)] font-medium text-center bg-[var(--color-input-bg)] p-4 rounded-lg shadow-md"
+          >
+            View Catalog
+          </Link>
         </div>
       ) : (
         <div className="text-center bg-[var(--color-input-bg)] p-6 rounded-lg shadow-md">

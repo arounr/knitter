@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react';
 import SubmitButton from '@/ui/submit-button';
 import { getPatternById } from '../pattern/[id]/action';
 import { patternMatrixToGrid } from './action';
+import {
+  addBackground,
+  fetchBackgroundPattern,
+} from '@/component/add-background';
 
 export default function PatternEditingPage() {
   //(patternId: string) {
@@ -193,6 +197,31 @@ export default function PatternEditingPage() {
             className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded w-full"
           >
             Apply Changes
+          </button>
+        </section>
+
+        <section className="flex flex-col items-center p-4 border border-[var(--color-text-secondary)] rounded-md mb-4">
+          {/* Add background button */}
+          <button
+            onClick={async () => {
+              saveToHistory();
+              try {
+                const backgroundPattern = await fetchBackgroundPattern(
+                  'þjms2007-45_514.txt',
+                );
+                setGrid((prevGrid) =>
+                  addBackground(prevGrid, backgroundPattern),
+                );
+              } catch (error) {
+                console.error(
+                  'Failed to add background pattern to grid:',
+                  error,
+                );
+              }
+            }}
+            className=" text-white py-2 px-4 rounded mb-4 w-32 h-16"
+          >
+            Add background
           </button>
         </section>
 
