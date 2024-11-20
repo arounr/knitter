@@ -115,12 +115,12 @@ export default function Pattern() {
             />
           </div>
 
-          <ol className="flex flex-wrap space-x-4">
+          <ol className="flex flex-wrap gap-4 justify-between">
             {color.map((colorValue, index) =>
               index < colors ? (
                 <li
                   key={'Color' + index}
-                  className="flex flex-col items-center"
+                  className="flex flex-col items-center flex-grow border border-gray-300 rounded-md p-4"
                 >
                   <label
                     htmlFor={'Color' + index}
@@ -138,7 +138,7 @@ export default function Pattern() {
                         color.map((c, i) => (i === index ? e.target.value : c)),
                       )
                     }
-                    className="w-16 h-10 text-center rounded-md"
+                    className="w-full max-w-[200px] h-10 text-center rounded-md"
                   />
                 </li>
               ) : null,
