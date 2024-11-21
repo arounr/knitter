@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import PatternContent from '@/component/pattern-content';
 import { Pattern } from '@/types/pattern';
 import { fetchPatterns } from '@/(main)/catalog/action';
-import { getLikedPatterns } from '@/(main)/library/actions';
+import { getLikedPatterns, getSharedPatterns } from '@/(main)/library/actions';
 
 type Tab = 'private' | 'liked' | 'shared';
 
@@ -45,8 +45,14 @@ const LibraryTabs = () => {
           isAsc,
         );
       } else if (activeTab === 'shared') {
-        // TODO: shared patterns
-        alert('TODO');
+        result = await getSharedPatterns(
+          currentPage,
+          itemsPerPage,
+          titleSearchTerm,
+          authorSearchTerm,
+          sortOption,
+          isAsc,
+        );
       } else if (activeTab === 'private') {
         const isPrivate = true;
         result = await fetchPatterns(
@@ -186,6 +192,7 @@ const LibraryTabs = () => {
         isLoading={isLoading}
         error={error}
         onSearch={performSearch}
+        showPublicStatus={true} // maybe make this depend on active tab?
         searchProps={{
           title: titleSearchTerm,
           onTitleChange: setTitleSearchTerm,

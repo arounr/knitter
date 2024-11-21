@@ -1,3 +1,4 @@
+import React from 'react';
 import ErrorMessage from '@/ui/error-message';
 import { getPatternById } from './action';
 import Image from 'next/image';
@@ -7,6 +8,7 @@ import { getProfile } from '@/(main)/profile/action';
 import { Pattern } from '@/types/pattern';
 import Link from 'next/link';
 import SaveToLibraryButton from '@/ui/save-pattern-button';
+import ShareButtonWithModal from '@/component/share-button';
 
 type PatternPageProps = {
   params: Promise<{ id: string }>;
@@ -32,10 +34,14 @@ const PatternPage = async ({ params }: PatternPageProps) => {
 
   if ('error' in patternResult) {
     return (
-      <ErrorMessage
-        headerTitle="Error Loading Pattern"
-        message={patternResult.error}
-      />
+      <div
+        className={'flex-grow flex flex-col items-center justify-center w-full'}
+      >
+        <ErrorMessage
+          headerTitle="Error Viewing Pattern"
+          message={patternResult.error}
+        />
+      </div>
     );
   }
 
@@ -46,10 +52,12 @@ const PatternPage = async ({ params }: PatternPageProps) => {
   // if logged in
   let profile;
   let isOwner;
+  let isCollaborator;
   let isPatternLiked;
   if ('data' in profileResult) {
     profile = profileResult.data as User;
     isOwner = profile.username === patternData.ownerUsername;
+    isCollaborator = patternData.collaboratorNames.includes(profile.username);
 
     isPatternLiked = profile.likedPatternIds
       .map((id) => id.toString())
@@ -103,8 +111,11 @@ const PatternPage = async ({ params }: PatternPageProps) => {
               initialLikeCount={patternData.likeCount}
               patternId={patternData.id}
               initialIsLiked={isPatternLiked || false}
-              disabled={profile ? false : true}
+              disabled={!profile}
             />
+
+            {/* Share Button for Owners */}
+            {isOwner && <ShareButtonWithModal patternId={patternId} />}
 
             <p
               className="mt-4 text-sm"
@@ -126,7 +137,7 @@ const PatternPage = async ({ params }: PatternPageProps) => {
               <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
                 Commit Pattern
               </button>
-              {isOwner ? (
+              {isOwner || isCollaborator ? (
                 <Link
                   href={`/pattern/edit/${patternId}`}
                   className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 text-center"
@@ -134,7 +145,7 @@ const PatternPage = async ({ params }: PatternPageProps) => {
                   Edit Pattern
                 </Link>
               ) : (
-                <SaveToLibraryButton patternId={patternId} />
+                profile && <SaveToLibraryButton patternId={patternId} />
               )}
             </div>
           </div>

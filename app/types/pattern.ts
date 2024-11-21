@@ -8,5 +8,6 @@ export type Pattern = {
   modificationDate: string; // ISO 8601 date string
   likeCount: number;
   imageUrl: string;
+  collaboratorNames: string[];
   ownerUsername: string;
 };

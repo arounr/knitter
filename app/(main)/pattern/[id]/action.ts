@@ -52,7 +52,30 @@ export async function saveToLibrary(patternId: string) {
       headers,
     });
 
+    return await handleResponse(response);
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : 'Unknown error occurred.',
+      code: 500,
+    };
+  }
+}
+
+export async function sharePattern(id: string, username: string) {
+  try {
+    const apiUrl = getApiUrl();
+    if (!apiUrl) throw ServerError;
+
+    const headers = await getAuthHeaders();
+
+    const response = await fetch(`${apiUrl}/patterns/share/${id}`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ username }),
+    });
     const result = await handleResponse(response);
+
+    console.log(result);
 
     return result;
   } catch (error) {

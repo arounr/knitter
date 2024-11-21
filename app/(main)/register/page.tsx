@@ -20,6 +20,7 @@ const RegisterPage = () => {
 
     const result = await register(formData);
     if ('error' in result) {
+      console.log(result);
       if (Array.isArray(result.error)) {
         setErrors(result.error);
       } else {
