@@ -4,9 +4,9 @@ import Link from 'next/link';
 import { getMostLikedPatterns } from './action';
 import Image from 'next/image';
 
-const mostLikedPatterns = (await getMostLikedPatterns(6)) as Pattern[];
+export default async function Home() {
+  const mostLikedPatterns = (await getMostLikedPatterns(6)) as Pattern[];
 
-export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center px-4">
       <div className="mt-12 mb-12">
@@ -74,7 +74,7 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col items-center">
-        <h2>Don't have an account yet?</h2>
+        <h2>Don&apos;t have an account yet?</h2>
         <Link
           href="/register"
           className="text-[var(--color-button-bg)] hover:text-[var(--color-button-bg-hover)] font-medium"

@@ -27,10 +27,14 @@ export async function register(
 
     const result = await handleResponse<{ success: boolean }>(response);
 
+    console.log(result);
     if ('error' in result) {
       if (result.code === 400 && result.error) {
         return {
-          error: Object.values(result.error).join(', '),
+          error:
+            typeof result.error === 'string'
+              ? result.error
+              : Object.values(result.error).join(', '),
           code: 400,
         };
       }

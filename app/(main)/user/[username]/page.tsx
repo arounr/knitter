@@ -17,7 +17,14 @@ export default async function UserPage({ params }: UserPageProps) {
 
   if ('error' in userData) {
     return (
-      <ErrorMessage headerTitle="Error Loading User" message={userData.error} />
+      <div
+        className={'flex-grow flex flex-col items-center justify-center w-full'}
+      >
+        <ErrorMessage
+          headerTitle="Error Loading User"
+          message={userData.error}
+        />
+      </div>
     );
   }
 

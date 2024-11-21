@@ -22,7 +22,7 @@ export const gridToPatternMatrix = (grid: number[][]) => {
   const patternMatrix = [];
 
   for (let r = 0; r < grid.length; r++) {
-    let row: string = '';
+    const row: string = '';
     for (let w = 0; w < grid[0].length; w++) {
       const cellValue = grid[r][w].toString();
       row.concat(cellValue);

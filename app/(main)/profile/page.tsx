@@ -1,7 +1,14 @@
-import { getProfile, logout } from './action';
+import {
+  changePassword,
+  changeUsername,
+  deleteUser,
+  getProfile,
+  logout,
+} from './action';
 import ProfilePicture from '@/ui/profile-picture';
 import ErrorMessage from '@/ui/error-message';
 import ServerError from '@/ui/server-error-message';
+import SettingsDropdown from '@/component/settings-dropdown';
 
 const ProfilePage = async () => {
   const profile = await getProfile();
@@ -22,7 +29,13 @@ const ProfilePage = async () => {
     );
   } else if ('error' in profile) {
     // Other error (likely server not open)
-    return <ServerError />;
+    return (
+      <div
+        className={'flex-grow flex flex-col items-center justify-center w-full'}
+      >
+        <ServerError />
+      </div>
+    );
   }
 
   const { username, profilePicture } = profile.data;
@@ -40,27 +53,11 @@ const ProfilePage = async () => {
         {/* Profile Picture Section */}
         <ProfilePicture profilePicture={profilePicture} />
 
-        <div className="space-y-4">
-          <h2 className="text-lg font-medium">Change Password</h2>
-          <input
-            type="password"
-            placeholder="Current Password"
-            className="w-full px-4 py-2 rounded-md bg-[var(--color-input-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--color-button-bg)]"
-          />
-          <input
-            type="password"
-            placeholder="New Password"
-            className="w-full px-4 py-2 rounded-md bg-[var(--color-input-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--color-button-bg)]"
-          />
-          <input
-            type="password"
-            placeholder="Confirm New Password"
-            className="w-full px-4 py-2 rounded-md bg-[var(--color-input-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--color-button-bg)]"
-          />
-          <button className="w-full px-4 py-2 bg-[var(--color-button-bg)] hover:bg-[var(--color-button-bg-hover)] text-white font-medium rounded-md">
-            Update Password
-          </button>
-        </div>
+        <SettingsDropdown
+          changeUsername={changeUsername}
+          changePassword={changePassword}
+          deleteAccount={deleteUser}
+        />
 
         <div className="mt-8 text-center">
           <button
