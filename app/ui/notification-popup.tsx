@@ -67,13 +67,13 @@ export default function NotificationPopup({
 
               {notification.type === 'ACCEPT_DECLINE' &&
                 notification.patternOwner && (
-                  <p className="text-sm text-[var(--color-text-secondary)] mt-1">
+                <p className="text-sm text-[var(--color-text-secondary)] mt-1">
                     Invitation from:{' '}
-                    <span className="font-semibold">
-                      {notification.patternOwner}
-                    </span>
-                  </p>
-                )}
+                  <span className="font-semibold">
+                    {notification.patternOwner}
+                  </span>
+                </p>
+              )}
 
               <p className="text-xs text-[var(--color-text-secondary)]">
                 {timeAgo(notification.timestamp)}

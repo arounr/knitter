@@ -1,6 +1,6 @@
 import React from 'react';
 import ErrorMessage from '@/ui/error-message';
-import { deletePattern, getPatternById } from './action';
+import { getPatternById } from './action';
 import Image from 'next/image';
 import LikeButton from '@/ui/like-button';
 import { User } from '@/types/user';
@@ -136,18 +136,22 @@ const PatternPage = async ({ params }: PatternPageProps) => {
 
             {/* Buttons Section */}
             <div className="mt-4 flex gap-4">
+              {/* Commit Button (Always Visible) */}
               <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
                 Commit Pattern
               </button>
-              {isOwner || isCollaborator ? (
+
+              {/* Save to Library Button (Visible if profile is truthy) */}
+              {profile && <SaveToLibraryButton patternId={patternId} />}
+
+              {/* Edit Button (Visible if isOwner or isCollaborator is truthy) */}
+              {(isOwner || isCollaborator) && (
                 <Link
                   href={`/pattern/edit/${patternId}`}
                   className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 text-center"
                 >
                   Edit Pattern
                 </Link>
-              ) : (
-                profile && <SaveToLibraryButton patternId={patternId} />
               )}
             </div>
           </div>

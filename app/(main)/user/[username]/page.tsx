@@ -7,7 +7,7 @@ import FormattedDate from '@/ui/formatted-date';
 import Link from 'next/link';
 
 interface UserPageProps {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }
 
 export default async function UserPage({ params }: UserPageProps) {

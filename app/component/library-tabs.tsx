@@ -64,6 +64,8 @@ const LibraryTabs = () => {
           sortOption,
           isAsc,
         );
+      } else {
+        result = { error: 'This tab is not allowed' };
       }
 
       if ('error' in result) {

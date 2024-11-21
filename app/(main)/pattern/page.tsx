@@ -6,6 +6,7 @@ import { newUrlPattern, savePattern } from './action';
 import SubmitButton from '@/ui/submit-button';
 import ColorMatrixTable from '@/component/color-matrix-table';
 import FileUploadComponent from '@/ui/file-upload-component';
+import { redirect } from 'next/navigation';
 
 export default function Pattern() {
   const [colors, setColors] = useState(3);
@@ -16,7 +17,6 @@ export default function Pattern() {
     '#F7D794',
   ]);
   const [currentColor, setCurrentColor] = useState(0);
-  const [name, setName] = useState('');
   const [select, setSelect] = useState(false);
   const [method, setMethod] = useState('');
   const [urlValue, setUrlValue] = useState('');
@@ -30,10 +30,10 @@ export default function Pattern() {
   const handleCellClick = (rowIndex: number, cellIndex: number) => {
     const updatedMatrix = pattern
       ? pattern.map((row, rIdx) =>
-          row.map((cell, cIdx) =>
-            rIdx === rowIndex && cIdx === cellIndex ? currentColor : cell,
-          ),
-        )
+        row.map((cell, cIdx) =>
+          rIdx === rowIndex && cIdx === cellIndex ? currentColor : cell,
+        ),
+      )
       : [[]];
     setPattern(updatedMatrix); // Update the matrix state with a new object
   };
@@ -64,11 +64,8 @@ export default function Pattern() {
     <main className="flex flex-col items-center p-8 font-sans text-[var(--color-text-primary)]">
       <section className="w-full max-w-2xl text-center mb-4">
         <h1 className="text-3xl font-semibold text-[var(--color-text-primary)]">
-          Create a Pattern (WIP)
+          Create a Pattern
         </h1>
-        <p className="text-[var(--color-text-secondary)] text-sm mt-2">
-          Customize and save your pattern with various settings.
-        </p>
       </section>
 
       <section className="flex flex-col items-center w-full max-w-2xl p-8 space-y-6 bg-[var(--color-card-bg)] rounded-lg shadow-lg sm:p-12">
@@ -86,8 +83,10 @@ export default function Pattern() {
               'color',
               String(color.map((stak, nr) => (nr < colors ? stak : ''))),
             );
-            console.log(formData);
+
             savePattern(formData);
+
+            redirect('/library');
           }}
           className="w-full space-y-6 flex flex-col"
         >
@@ -106,7 +105,6 @@ export default function Pattern() {
               minLength={1}
               maxLength={128}
               size={20}
-              onChange={(e) => setName(e.target.value)}
               defaultValue=""
               className="w-full px-4 py-2 mt-1 bg-[var(--color-input-bg)] rounded-md focus:ring-2 focus:ring-[var(--color-button-bg)] focus:outline-none"
             />
@@ -151,7 +149,7 @@ export default function Pattern() {
                 setCurrentColor(0);
               }}
             >
-              <p>Color 0</p>
+              <p>Eraser</p>
               <div className="w-full max-w-[50px] h-10 text-center rounded-md border border-gray-300 bg-grey"></div>
             </li>
             {color.map((colorValue, index) =>
@@ -280,7 +278,6 @@ export default function Pattern() {
                   onClick={(e) => {
                     e.preventDefault();
                     setPattern(Array(height).fill(Array(width).fill(0)));
-                    console.log(pattern);
                     // setPattern([])
                   }}
                 >
@@ -302,7 +299,7 @@ export default function Pattern() {
           </div>
 
           <SubmitButton
-            className="w-full py-2 font-medium text-[var(--color-primary-text)] bg-[var(--color-button-bg)] rounded-md hover:bg-[var(--color-button-bg-hover)] focus:ring-2 focus:ring-[var(--color-button-bg)] focus:outline-none"
+            className="w-full py-2 font-medium text-[var(--color-white-text)] bg-[var(--color-button-bg)] rounded-md hover:bg-[var(--color-button-bg-hover)] focus:ring-2 focus:ring-[var(--color-button-bg)] focus:outline-none"
             text="Save Pattern"
             loadingText="Saving Pattern..."
           />

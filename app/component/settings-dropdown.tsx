@@ -4,7 +4,6 @@ import Form from 'next/form';
 import { useState } from 'react';
 import SubmitButton from '@/ui/submit-button';
 import { ApiResponse } from '@/utils/apiUtils';
-import { redirect } from 'next/navigation';
 
 type SettingsDropdownProps = {
   changePassword: (

@@ -1,10 +1,12 @@
 'use server';
-import { ApiResponse, getApiUrl, ServerError } from '@/utils/apiUtils';
-import { getAuthHeaders, handleResponse } from '@/utils/serverApiUtils';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
+import { getApiUrl, ServerError } from '@/utils/apiUtils';
+import { getAuthHeaders } from '@/utils/serverApiUtils';
 
-export const newUrlPattern = async (url: string, width: number, numColors: number) => {
+export const newUrlPattern = async (
+  url: string,
+  width: number,
+  numColors: number,
+) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!apiUrl) {
     return { error: 'API URL is not defined' };
@@ -13,17 +15,17 @@ export const newUrlPattern = async (url: string, width: number, numColors: numbe
     const response = await fetch(`${apiUrl}/patterns/url`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ url, width, numColors })
+      body: JSON.stringify({ url, width, numColors }),
     });
 
     if (!response.ok) {
       throw new Error(`Error: ${response}`);
     }
 
-    const data = await (response.text()); // Assuming makePattern returns a simple string
-    return data
+    const data = await response.text(); // Assuming makePattern returns a simple string
+    return data;
   } catch (error) {
     console.error('Failed to create pattern:', error);
   }
@@ -32,9 +34,10 @@ export const newUrlPattern = async (url: string, width: number, numColors: numbe
 export const savePattern = async (formData: FormData) => {
   const title = String(formData.get('name'));
   const isPublic = formData.get('public') == 'on';
-  const pm = String(formData.get('pattern')).split(',')
-  const color = String(formData.get('color')).split(',').filter(v => v)
-  console.log(1)
+  const pm = String(formData.get('pattern')).split(',');
+  const color = String(formData.get('color'))
+    .split(',')
+    .filter((v) => v);
   try {
     const apiUrl = getApiUrl();
     if (!apiUrl) throw ServerError;
@@ -45,27 +48,24 @@ export const savePattern = async (formData: FormData) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...headers
+        ...headers,
       },
-      body: JSON.stringify(
-        {
-          title,
-          isPublic,
-          patternMatrix: pm,
-          colorCodes: color
-        }
-      )
+      body: JSON.stringify({
+        title,
+        isPublic,
+        patternMatrix: pm,
+        colorCodes: color,
+      }),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.log(errorData)
       return {
         error: errorData.message || 'Failed to save pattern',
         code: response.status,
       };
     }
-    console.log({ data: { success: true }, code: response.status })
+
     return { data: { success: true }, code: response.status };
   } catch (error) {
     return {
@@ -73,4 +73,4 @@ export const savePattern = async (formData: FormData) => {
       code: 500,
     };
   }
-}
+};

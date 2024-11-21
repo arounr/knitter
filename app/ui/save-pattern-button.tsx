@@ -43,7 +43,7 @@ export default function SaveToLibraryButton({
           isSaving ? 'bg-gray-400' : 'bg-green-500 hover:bg-green-600'
         }`}
       >
-        {isSaving ? 'Saving...' : 'Save to Library'}
+        {isSaving ? 'Copying...' : 'Copy to Library'}
       </button>
       {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
     </div>

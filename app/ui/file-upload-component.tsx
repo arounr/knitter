@@ -36,7 +36,6 @@ function FileUploadComponent({
       }
 
       const data = await response.json();
-      console.log('Received matrix data:', data);
       setPattern(data);
     } catch (e) {
       console.error(e);

@@ -77,11 +77,11 @@ export function addBackground(
     backgroundStarts.length > 0
       ? [...backgroundStarts]
       : [
-          [0, 0],
-          [n - 1, 0],
-          [0, m - 1],
-          [n - 1, m - 1],
-        ];
+        [0, 0],
+        [n - 1, 0],
+        [0, m - 1],
+        [n - 1, m - 1],
+      ];
 
   const nonBorderColors = [matrixBackgroundColor, 10, 11, 13];
 
