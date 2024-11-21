@@ -1,6 +1,6 @@
 'use server';
 
-import { getApiUrl, ServerError } from '@/utils/apiUtils';
+import { ApiResponse, getApiUrl, ServerError } from '@/utils/apiUtils';
 import { getAuthHeaders, handleResponse } from '@/utils/serverApiUtils';
 
 export async function getPatternById(id: string) {
@@ -75,9 +75,40 @@ export async function sharePattern(id: string, username: string) {
     });
     const result = await handleResponse(response);
 
+    return result;
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : 'Unknown error occurred.',
+      code: 500,
+    };
+  }
+}
+
+export async function deletePattern(
+  id: string,
+): Promise<ApiResponse<{ success: boolean }>> {
+  try {
+    const apiUrl = getApiUrl();
+    if (!apiUrl) throw ServerError;
+
+    const headers = await getAuthHeaders();
+
+    const response = await fetch(`${apiUrl}/patterns/${id}`, {
+      method: 'DELETE',
+      headers,
+    });
+    const result = await handleResponse(response);
+
+    if ('error' in result) {
+      return {
+        error: result.error || 'Deleting pattern failed',
+        code: result.code,
+      };
+    }
+
     console.log(result);
 
-    return result;
+    return { data: { success: true }, code: result.code };
   } catch (error) {
     return {
       error: error instanceof Error ? error.message : 'Unknown error occurred.',

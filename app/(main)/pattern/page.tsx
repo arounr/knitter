@@ -15,7 +15,7 @@ export default function Pattern() {
     '#CDB4DB',
     '#F7D794',
   ]);
-  const [currentColor, setCurrentColor] = useState(0)
+  const [currentColor, setCurrentColor] = useState(0);
   const [name, setName] = useState('');
   const [select, setSelect] = useState(false);
   const [method, setMethod] = useState('');
@@ -28,11 +28,13 @@ export default function Pattern() {
   const [currentLetterIndex, setCurrentLetterIndex] = useState(0);
   const words = useMemo(() => ['url', 'uploading', 'creating'], []);
   const handleCellClick = (rowIndex: number, cellIndex: number) => {
-    const updatedMatrix = pattern ? pattern.map((row, rIdx) =>
-      row.map((cell, cIdx) =>
-        rIdx === rowIndex && cIdx === cellIndex ? currentColor : cell
-      )
-    ) : [[]];
+    const updatedMatrix = pattern
+      ? pattern.map((row, rIdx) =>
+          row.map((cell, cIdx) =>
+            rIdx === rowIndex && cIdx === cellIndex ? currentColor : cell,
+          ),
+        )
+      : [[]];
     setPattern(updatedMatrix); // Update the matrix state with a new object
   };
   useEffect(() => {
@@ -70,11 +72,25 @@ export default function Pattern() {
       </section>
 
       <section className="flex flex-col items-center w-full max-w-2xl p-8 space-y-6 bg-[var(--color-card-bg)] rounded-lg shadow-lg sm:p-12">
-        <Form action={(formData: FormData) => {
-          formData.append('pattern', pattern && String(pattern.map(stak => String(stak).replaceAll(',', ''))) || '')
-          formData.append('color', String(color.map((stak, nr) => nr < colors ? stak : '')))
-          savePattern(formData)
-        }} className="w-full space-y-6 flex flex-col">
+        <Form
+          action={(formData: FormData) => {
+            formData.append(
+              'pattern',
+              (pattern &&
+                String(
+                  pattern.map((stak) => String(stak).replaceAll(',', '')),
+                )) ||
+                '',
+            );
+            formData.append(
+              'color',
+              String(color.map((stak, nr) => (nr < colors ? stak : ''))),
+            );
+            console.log(formData);
+            savePattern(formData);
+          }}
+          className="w-full space-y-6 flex flex-col"
+        >
           <div className="flex flex-col">
             <label
               htmlFor="name"
@@ -136,11 +152,7 @@ export default function Pattern() {
               }}
             >
               <p>Color 0</p>
-              <div
-                className="w-full max-w-[50px] h-10 text-center rounded-md border border-gray-300 bg-grey"
-              >
-
-              </div>
+              <div className="w-full max-w-[50px] h-10 text-center rounded-md border border-gray-300 bg-grey"></div>
             </li>
             {color.map((colorValue, index) =>
               index < colors ? (
@@ -151,21 +163,20 @@ export default function Pattern() {
                     setCurrentColor(index + 1);
                   }}
                 >
-                  <label htmlFor={'Color' + index}>
-                    Color {index + 1}
-                  </label>
+                  <label htmlFor={'Color' + index}>Color {index + 1}</label>
                   <input
                     type="color"
                     id={'Color' + index}
                     name={'Color' + index}
                     value={colorValue}
                     onChange={(e) =>
-                      setColor(color.map((c, i) => (i === index ? e.target.value : c)))
+                      setColor(
+                        color.map((c, i) => (i === index ? e.target.value : c)),
+                      )
                     }
                     className="w-full max-w-[50px] h-10 text-center rounded-md border border-gray-300 hover:cursor-crosshair"
                   />
                 </li>
-
               ) : null,
             )}
           </ol>
@@ -247,43 +258,53 @@ export default function Pattern() {
             )}
             {method === 'creating' && (
               <div className="flex flex-col">
-                <label htmlFor='height' className="text-sm font-medium text-[var(--color-text-secondary)]">Pattern Height: {height}</label>
+                <label
+                  htmlFor="height"
+                  className="text-sm font-medium text-[var(--color-text-secondary)]"
+                >
+                  Pattern Height: {height}
+                </label>
                 <input
-                  type='number'
-                  id='height'
-                  name='height'
+                  type="number"
+                  id="height"
+                  name="height"
                   min={1}
                   value={height}
                   onChange={(e) =>
                     setHeight(Number.parseInt(e.target.value) || height)
                   }
-                  className="w-full text-black" />
+                  className="w-full text-black"
+                />
                 <button
                   className="w-full py-2 font-medium text-[var(--color-primary-text)] bg-[var(--color-button-bg)] rounded-md hover:bg-[var(--color-button-bg-hover)] focus:ring-2 focus:ring-[var(--color-button-bg)] focus:outline-none mt-6"
                   onClick={(e) => {
                     e.preventDefault();
-                    setPattern(Array(height).fill(Array(width).fill(0)))
-                    console.log(pattern)
+                    setPattern(Array(height).fill(Array(width).fill(0)));
+                    console.log(pattern);
                     // setPattern([])
                   }}
-                >Create matrix</button>
+                >
+                  Create matrix
+                </button>
               </div>
             )}
           </div>
 
           <div className="w-full">
-            {pattern && <ColorMatrixTable
-              matrix={pattern}
-              colors={color}
-              // currentColor={currentColor}
-              onCellClick={handleCellClick}
-
-            />}
+            {pattern && (
+              <ColorMatrixTable
+                matrix={pattern}
+                colors={color}
+                // currentColor={currentColor}
+                onCellClick={handleCellClick}
+              />
+            )}
           </div>
 
           <SubmitButton
             className="w-full py-2 font-medium text-[var(--color-primary-text)] bg-[var(--color-button-bg)] rounded-md hover:bg-[var(--color-button-bg-hover)] focus:ring-2 focus:ring-[var(--color-button-bg)] focus:outline-none"
             text="Save Pattern"
+            loadingText="Saving Pattern..."
           />
         </Form>
       </section>

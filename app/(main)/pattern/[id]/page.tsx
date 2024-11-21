@@ -1,6 +1,6 @@
 import React from 'react';
 import ErrorMessage from '@/ui/error-message';
-import { getPatternById } from './action';
+import { deletePattern, getPatternById } from './action';
 import Image from 'next/image';
 import LikeButton from '@/ui/like-button';
 import { User } from '@/types/user';
@@ -9,6 +9,7 @@ import { Pattern } from '@/types/pattern';
 import Link from 'next/link';
 import SaveToLibraryButton from '@/ui/save-pattern-button';
 import ShareButtonWithModal from '@/component/share-button';
+import DeleteButton from '@/ui/delete-button';
 
 type PatternPageProps = {
   params: Promise<{ id: string }>;
@@ -68,7 +69,8 @@ const PatternPage = async ({ params }: PatternPageProps) => {
     <div
       className={'flex-grow flex flex-col items-center justify-center w-full'}
     >
-      <div className="max-w-4xl mx-auto p-8 bg-[var(--color-card-bg)] shadow-lg rounded-lg">
+      <div className="relative max-w-4xl mx-auto p-8 bg-[var(--color-card-bg)] shadow-lg rounded-lg">
+        {isOwner && <DeleteButton id={patternData.id} />}
         <div className="flex flex-col md:flex-row">
           {/* Image Section */}
           <div className="flex-shrink-0 w-full md:w-1/2 h-80 bg-[var(--color-card-bg)] rounded-xl overflow-hidden flex items-center justify-center">
