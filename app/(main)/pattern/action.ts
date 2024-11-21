@@ -1,4 +1,8 @@
 'use server';
+import { ApiResponse, getApiUrl, ServerError } from '@/utils/apiUtils';
+import { getAuthHeaders, handleResponse } from '@/utils/serverApiUtils';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export const newUrlPattern = async (url: string, width: number, numColors: number) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -24,3 +28,49 @@ export const newUrlPattern = async (url: string, width: number, numColors: numbe
     console.error('Failed to create pattern:', error);
   }
 };
+
+export const savePattern = async (formData: FormData) => {
+  const title = String(formData.get('name'));
+  const isPublic = formData.get('public') == 'on';
+  const pm = String(formData.get('pattern')).split(',')
+  const color = String(formData.get('color')).split(',').filter(v => v)
+  console.log(1)
+  try {
+    const apiUrl = getApiUrl();
+    if (!apiUrl) throw ServerError;
+
+    const headers = await getAuthHeaders(false);
+
+    const response = await fetch(`${apiUrl}/patterns`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers
+      },
+      body: JSON.stringify(
+        {
+          title,
+          isPublic,
+          patternMatrix: pm,
+          colorCodes: color
+        }
+      )
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.log(errorData)
+      return {
+        error: errorData.message || 'Failed to save pattern',
+        code: response.status,
+      };
+    }
+    console.log({ data: { success: true }, code: response.status })
+    return { data: { success: true }, code: response.status };
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : 'Unknown error occurred.',
+      code: 500,
+    };
+  }
+}

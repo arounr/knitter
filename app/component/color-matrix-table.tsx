@@ -1,31 +1,51 @@
-import React from 'react';
+'use client'
+import React, { useState } from 'react';
 
-const ColorMatrixTable = ({ matrix, colors }: { matrix: Array<Array<number>>, colors: Array<string> }) => {
+const ColorMatrixTable = ({
+  matrix,
+  colors,
+  onCellClick,
+}: {
+  matrix: number[][];
+  colors: string[];
+  onCellClick: (rowIndex: number, cellIndex: number) => void;
+}) => {
+  const [isHoldingDown, setIsHoldingDown] = useState(false);
+
+  const handleMouseDown = (rowIndex: number, cellIndex: number) => {
+    setIsHoldingDown(true);
+    onCellClick(rowIndex, cellIndex); // Paint the first cell on mouse down
+  };
+
+  const handleMouseUp = () => {
+    setIsHoldingDown(false);
+  };
+
+  const handleMouseEnter = (rowIndex: number, cellIndex: number) => {
+    if (isHoldingDown) {
+      onCellClick(rowIndex, cellIndex); // Paint cells as mouse moves while held down
+    }
+  };
+
   return (
-    <div className="overflow-auto">
+    <div
+      className="overflow-auto"
+      onMouseUp={handleMouseUp} // Ensure mouse up stops the dragging behavior
+    >
       <table className="table-auto border-collapse">
         <tbody>
-          {matrix.map((row: number[], rowIndex: React.Key | null | undefined) => (
+          {matrix.map((row, rowIndex) => (
             <tr key={rowIndex}>
-              {row.map((cellValue: number, cellIndex: React.Key | null | undefined) => {
-                // Skip if cellValue is 0 (assuming 0 represents a transparent or empty cell)
-                if (cellValue === 0) {
-                  return (
-                    <td key={cellIndex} className="w-1 h-1 border border-gray-200">
-                      {/* Empty cell */}
-                    </td>
-                  );
-                }
-
-                // Get the color corresponding to the cellValue
-                const cellColor = colors[cellValue - 1] || '#FFFFFF';
-
+              {row.map((cellValue, cellIndex) => {
+                const cellColor = cellValue === 0 ? 'gray' : colors[cellValue - 1];
                 return (
                   <td
                     key={cellIndex}
-                    className="w-1 h-1"
+                    className="w-1 h-1 border border-gray-200"
                     style={{ backgroundColor: cellColor }}
-                  ></td>
+                    onMouseDown={() => handleMouseDown(rowIndex, cellIndex)}
+                    onMouseEnter={() => handleMouseEnter(rowIndex, cellIndex)}
+                  />
                 );
               })}
             </tr>
