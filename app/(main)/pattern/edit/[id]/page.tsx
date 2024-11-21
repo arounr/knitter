@@ -48,18 +48,16 @@ const PatternPage = async ({ params }: PatternPageProps) => {
 
   // if logged in
   let profile;
-  let isOwner;
+  // let isOwner;
   let isPatternLiked;
   if ('data' in profileResult) {
     profile = profileResult.data as User;
-    isOwner = profile.username === patternData.ownerUsername;
+    // isOwner = profile.username === patternData.ownerUsername;
 
     isPatternLiked = profile.likedPatternIds
       .map((id) => id.toString())
       .includes(patternId);
   }
-
-  console.log(patternData)
 
   return (
     <div

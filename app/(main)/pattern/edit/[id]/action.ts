@@ -7,7 +7,6 @@ export const changePattern = async (formData: FormData) => {
   const pm = String(formData.get('pattern')).split(',')
   const color = String(formData.get('color')).split(',').filter(v => v)
   const id = Number.parseInt(String(formData.get('id')))
-  console.log(1)
   try {
     const apiUrl = getApiUrl();
     if (!apiUrl) throw ServerError;
@@ -32,13 +31,11 @@ export const changePattern = async (formData: FormData) => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.log(errorData)
       return {
         error: errorData.message || 'Failed to save pattern',
         code: response.status,
       };
     }
-    console.log({ data: { success: true }, code: response.status })
     return { data: { success: true }, code: response.status };
   } catch (error) {
     return {
